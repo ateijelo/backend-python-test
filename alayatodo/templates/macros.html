@@ -1,0 +1,23 @@
+{% macro todo_checkbox(todo) -%}
+  {% if todo.completed %}
+    <form method="POST" action="{{ url_for('todo_clear', id=todo.id) }}">
+      <button type="submit" class="btn btn-xs btn-default"><span class="todo-check-muted glyphicon glyphicon-ok"></button>
+    </form>
+  {% else %}
+    <form method="POST" action="{{ url_for('todo_complete', id=todo.id) }}">
+      <button type="submit" class="btn btn-xs btn-default"><span class="text-success glyphicon glyphicon-ok"></button>
+    </form>
+  {% endif %}
+{%- endmacro %}
+
+{% macro todo_description(todo) -%}
+    <a href="{{ url_for('todo', id=todo.id) }}" class="{% if todo.completed -%}todo-completed{% endif %}">
+        {{ todo.description }}
+    </a>
+{%- endmacro %}
+
+{% macro todo_delete(todo) -%}
+  <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
+      <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+  </form>
+{%- endmacro %}

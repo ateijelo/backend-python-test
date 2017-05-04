@@ -31,6 +31,7 @@ def login_POST():
     user = cur.fetchone()
     if user:
         session['user'] = dict(user)
+        session['user_id'] = user['id']
         session['logged_in'] = True
         return redirect('/todo')
 
@@ -85,3 +86,19 @@ def todo_delete(id):
     g.db.execute("DELETE FROM todos WHERE id ='%s'" % id)
     g.db.commit()
     return redirect('/todo')
+
+def todo_set(todo_id, completed):
+    user_id = session.get('user_id', None)
+    if user_id is None:
+        return redirect('/login')
+    g.db.execute("UPDATE todos SET completed = ? WHERE id = ? and user_id = ?", ((1 if completed else 0), todo_id, user_id))
+    g.db.commit()
+    return redirect(request.referrer or '/todo')
+
+@app.route('/todo/complete/<id>', methods=['POST'])
+def todo_complete(id):
+    return todo_set(id, True)
+
+@app.route('/todo/clear/<id>', methods=['POST'])
+def todo_clear(id):
+    return todo_set(id, False)

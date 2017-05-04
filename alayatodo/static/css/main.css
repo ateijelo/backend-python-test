@@ -5,3 +5,12 @@ body {
 .login-form > div {
     margin-top: 10px;
 }
+
+.todo-completed {
+  text-decoration: line-through;
+  color: lightgray;
+}
+
+.todo-check-muted {
+  color: lightgray;
+}

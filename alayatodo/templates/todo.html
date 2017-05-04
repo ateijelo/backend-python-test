@@ -1,19 +1,20 @@
 {% extends "layout.html" %}
 
+
 {% block content %}
+
+{% from "macros.html" import todo_checkbox, todo_delete %}
+
 <div class="col-md-4 col-md-offset-4">
     <h1>Todo:</h1>
     <table class="table table-striped">
-        <th>#</th><th>User</th><th>Description</th><th></th>
+        <th></th><th>#</th><th>User</th><th>Description</th><th></th>
         <tr>
-            <td>{{ todo.id }}</td>
-            <td>{{ todo.user_id }}</td>
-            <td>{{ todo.description }}</td>
-            <td>
-                <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
-                    <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
-                </form>
-            </td>
+          <td>{{ todo_checkbox(todo) }}</td>
+          <td>{{ todo.id }}</td>
+          <td>{{ todo.user_id }}</td>
+          <td>{{ todo.description }}</td>
+          <td>{{ todo_delete(todo) }}</td>
         </tr>
     </table>
 </div>
