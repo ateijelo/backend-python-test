@@ -18,11 +18,12 @@ from alayatodo import app
 
 def _run_sql(filename):
     try:
-        subprocess.check_output(
-            "sqlite3 %s < %s" % (app.config['DATABASE'], filename),
-            stderr=subprocess.STDOUT,
-            shell=True
-        )
+        with open(filename) as f:
+            subprocess.check_output(
+                ["sqlite3", app.config['DATABASE']],
+                stdin=f,
+                stderr=subprocess.STDOUT,
+            )
     except subprocess.CalledProcessError, ex:
         print(ex.output)
         sys.exit(1)
