@@ -118,6 +118,7 @@ def todo_delete(id):
     flash("Todo deleted successfully", "success")
     return redirect('/todo')
 
+
 def todo_set(todo_id, completed):
     user_id = session.get('user_id', None)
     if user_id is None:
@@ -126,9 +127,11 @@ def todo_set(todo_id, completed):
     g.db.commit()
     return redirect(request.referrer or '/todo')
 
+
 @app.route('/todo/complete/<id>', methods=['POST'])
 def todo_complete(id):
     return todo_set(id, True)
+
 
 @app.route('/todo/clear/<id>', methods=['POST'])
 def todo_clear(id):
