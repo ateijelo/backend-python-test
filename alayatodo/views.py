@@ -1,12 +1,24 @@
+from functools import wraps
 from alayatodo import app
 from flask import (
+    abort,
+    flash,
     g,
+    jsonify,
     redirect,
     render_template,
     request,
     session,
-    flash
     )
+
+
+def login_required(view_func):
+    @wraps(view_func)
+    def g(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect('/login')
+        return view_func(*args, **kwargs)
+    return g
 
 
 @app.route('/')
@@ -43,6 +55,23 @@ def logout():
     session.pop('logged_in', None)
     session.pop('user', None)
     return redirect('/')
+
+
+@app.route('/todo/<todo_id>/json', methods=['GET'])
+@login_required
+def todo_json(todo_id):
+    user_id = session.get('user_id') # Guaranteed by login_required
+    cur = g.db.execute("SELECT * FROM todos WHERE id = ? and user_id = ?", (todo_id, user_id))
+    todo = cur.fetchone()
+    if not todo:
+        # Note: we could return code 404 (Not Found) when the todo_id is
+        # not valid and 403 (Forbidden) when it's valid but doesn't belong
+        # to user_id, but users could abuse this to find out which todos
+        # exist and which don't.
+        # In any case, from this user_id's perspective, the todo doesn't
+        # exist, so 404.
+        abort(404)
+    return jsonify(dict(todo))
 
 
 @app.route('/todo/<id>', methods=['GET'])
