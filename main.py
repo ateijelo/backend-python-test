@@ -45,7 +45,7 @@ def _run_migrations(migrations_dir):
             print("Migrations must be named <INTEGER>-brief-description.sql", file=sys.stderr)
             os.exit(1)
 
-        if db_version > mig_version:
+        if db_version >= mig_version:
             continue
 
         print("Running migration {}... ".format(mig), end="")
