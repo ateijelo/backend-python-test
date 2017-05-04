@@ -69,8 +69,8 @@ def todos_POST():
     description = request.form.get('description', '')
     if len(description) > 0:
         g.db.execute(
-            "INSERT INTO todos (user_id, description) VALUES ('%s', '%s')"
-            % (session['user']['id'], description)
+            "INSERT INTO todos (user_id, description) VALUES (?, ?)",
+            (session['user']['id'], description)
         )
         g.db.commit()
     else:
