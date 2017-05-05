@@ -11,13 +11,13 @@
 {%- endmacro %}
 
 {% macro todo_description(todo) -%}
-    <a href="{{ url_for('todo', id=todo.id) }}" class="{% if todo.completed -%}todo-completed{% endif %}">
+    <a href="{{ url_for('todo', todo_id=todo.id) }}" class="{% if todo.completed -%}todo-completed{% endif %}">
         {{ todo.description }}
     </a>
 {%- endmacro %}
 
 {% macro todo_delete(todo) -%}
-  <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
+  <form method="post" action="{{ url_for('todo_delete', todo_id=todo.id) }}">
       <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
   </form>
 {%- endmacro %}
