@@ -12,4 +12,4 @@ CREATE TABLE todos (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-PRAGMA user_version = 2017050300;
+PRAGMA user_version = 2017050500;

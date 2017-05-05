@@ -1,3 +1,6 @@
+import binascii
+import hashlib
+
 from alayatodo import db
 
 class User(db.Model):
@@ -16,10 +19,18 @@ class User(db.Model):
 
     @staticmethod
     def authenticate(username, password):
-        return db.session.query(User).filter(
-            User.username == username,
-            User.password == password
+        user = db.session.query(User).filter(
+            User.username == username
         ).first()
+        if user:
+            salt = user.password[:32]
+            h = salt + binascii.hexlify(
+                hashlib.pbkdf2_hmac('sha256', password, salt, 100000)
+            )
+            if h == user.password:
+                return user
+        return None
+
 
 class Todo(db.Model):
 
