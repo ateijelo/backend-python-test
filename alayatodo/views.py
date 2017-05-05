@@ -105,7 +105,7 @@ def todos_POST():
 @login_required
 def todo_delete(todo_id):
     todo = db.session.query(Todo).get(todo_id)
-    if todo.user_id == session['user_id']:
+    if todo and todo.user_id == session['user_id']:
         db.session.delete(todo)
         db.session.commit()
         flash("Todo deleted successfully", "success")
