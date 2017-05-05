@@ -74,6 +74,7 @@ def todo_json(todo_id):
 
 
 @app.route('/todo/<todo_id>', methods=['GET'])
+@login_required
 def todo(todo_id):
     cur = g.db.execute(
         "SELECT * FROM todos \
