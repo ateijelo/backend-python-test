@@ -80,7 +80,10 @@ def todo(todo_id):
 @app.route('/todo/', methods=['GET'])
 @login_required
 def todos():
-    todos = db.session.query(Todo).filter(Todo.user_id == session['user_id'])
+    per_page = request.args.get('per_page', 10, int)
+    todos = db.session.query(Todo).filter(
+        Todo.user_id == session['user_id']
+    ).paginate(per_page=per_page)
     return render_template('todos.html', todos=todos)
 
 
