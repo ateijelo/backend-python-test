@@ -88,10 +88,13 @@ def todo(todo_id):
 
 
 @app.route('/todo/', methods=['GET'])
+@login_required
 def todos():
-    if not session.get('logged_in'):
-        return redirect('/login')
-    cur = g.db.execute("SELECT * FROM todos")
+    cur = g.db.execute(
+        "SELECT * FROM todos \
+        WHERE user_id = ?",
+        (session['user_id'],)
+    )
     todos = cur.fetchall()
     return render_template('todos.html', todos=todos)
 
