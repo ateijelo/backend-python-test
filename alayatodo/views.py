@@ -128,11 +128,13 @@ def todo_delete(todo_id):
     return redirect('/todo')
 
 
+@login_required
 def todo_set(todo_id, completed):
-    user_id = session.get('user_id', None)
-    if user_id is None:
-        return redirect('/login')
-    g.db.execute("UPDATE todos SET completed = ? WHERE id = ? and user_id = ?", ((1 if completed else 0), todo_id, user_id))
+    g.db.execute(
+        "UPDATE todos SET completed = ? \
+         WHERE id = ? and user_id = ?",
+        ((1 if completed else 0), todo_id, session['user_id'])
+    )
     g.db.commit()
     return redirect(request.referrer or '/todo')
 
