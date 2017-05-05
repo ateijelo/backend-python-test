@@ -42,9 +42,8 @@ def login_POST():
     cur = g.db.execute(sql % (username, password))
     user = cur.fetchone()
     if user:
-        session['user'] = dict(user)
         session['user_id'] = user['id']
-        session['logged_in'] = True
+        session['username'] = user['username']
         return redirect('/todo')
 
     return redirect('/login')
@@ -52,8 +51,8 @@ def login_POST():
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
-    session.pop('user', None)
+    session.pop('username', None)
+    session.pop('user_id', None)
     return redirect('/')
 
 
