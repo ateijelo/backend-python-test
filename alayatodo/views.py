@@ -38,8 +38,8 @@ def login_POST():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    sql = "SELECT * FROM users WHERE username = '%s' AND password = '%s'";
-    cur = g.db.execute(sql % (username, password))
+    sql = "SELECT * FROM users WHERE username = ? AND password = ?"
+    cur = g.db.execute(sql, (username, password))
     user = cur.fetchone()
     if user:
         session['user_id'] = user['id']
