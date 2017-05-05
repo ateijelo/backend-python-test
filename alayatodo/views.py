@@ -116,10 +116,13 @@ def todos_POST():
 
 
 @app.route('/todo/<id>', methods=['POST'])
-def todo_delete(id):
-    if not session.get('logged_in'):
-        return redirect('/login')
-    g.db.execute("DELETE FROM todos WHERE id ='%s'" % id)
+@login_required
+def todo_delete(todo_id):
+    g.db.execute(
+        "DELETE FROM todos \
+         WHERE id ='%s' AND user_id = ?",
+        (todo_id, session['user_id'])
+    )
     g.db.commit()
     flash("Todo deleted successfully", "success")
     return redirect('/todo')
