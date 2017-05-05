@@ -99,16 +99,14 @@ def todos():
     return render_template('todos.html', todos=todos)
 
 
-@app.route('/todo', methods=['POST'])
 @app.route('/todo/', methods=['POST'])
+@login_required
 def todos_POST():
-    if not session.get('logged_in'):
-        return redirect('/login')
     description = request.form.get('description', '')
     if len(description) > 0:
         g.db.execute(
             "INSERT INTO todos (user_id, description) VALUES (?, ?)",
-            (session['user']['id'], description)
+            (session['user_id'], description)
         )
         g.db.commit()
         flash("Todo added successfully", "success")
