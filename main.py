@@ -28,10 +28,14 @@ def _run_sql(filename):
         print(ex.output)
         sys.exit(1)
 
+def _run_py(filename):
+    subprocess.check_call(
+        ["python", filename, app.config['DATABASE']],
+    )
 
 def _run_migrations(migrations_dir):
     for mig in sorted(os.listdir(migrations_dir)):
-        if not mig.lower().endswith('.sql'):
+        if not (mig.lower().endswith('.sql') or mig.lower().endswith('.py')):
             continue
 
         db_version = int(subprocess.check_output([
@@ -49,7 +53,12 @@ def _run_migrations(migrations_dir):
             continue
 
         print("Running migration {}... ".format(mig), end="")
-        _run_sql(os.path.join(migrations_dir, mig))
+
+        if mig.lower().endswith('.sql'):
+            _run_sql(os.path.join(migrations_dir, mig))
+        if mig.lower().endswith('.py'):
+            _run_py(os.path.join(migrations_dir, mig))
+
         # Update database version
         subprocess.check_call([
             "sqlite3",

@@ -4,6 +4,7 @@ Place migration scripts in this directory. Files must be named in
 the following fashion:
 
     2017040500-description-of-the-changes.sql
+    2017040500-description-of-the-changes.py
 
 The first element must be a number lower than 2^31-1, as it will
 be stored and compared in SQLite's pragma variable `user_version`,

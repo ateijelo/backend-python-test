@@ -7,7 +7,7 @@ DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
-SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/alayatodo.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = Flask(__name__)
