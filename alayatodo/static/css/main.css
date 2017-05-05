@@ -14,3 +14,10 @@ body {
 .todo-check-muted {
   color: lightgray;
 }
+
+.float-top-right {
+  position: absolute;
+  z-index: 1;
+  right: 0px;
+  margin: 10px;
+}
