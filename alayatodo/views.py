@@ -87,7 +87,6 @@ def todo(todo_id):
     return render_template('todo.html', todo=todo)
 
 
-@app.route('/todo', methods=['GET'])
 @app.route('/todo/', methods=['GET'])
 def todos():
     if not session.get('logged_in'):
