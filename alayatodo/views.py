@@ -73,10 +73,16 @@ def todo_json(todo_id):
     return jsonify(dict(todo))
 
 
-@app.route('/todo/<id>', methods=['GET'])
-def todo(id):
-    cur = g.db.execute("SELECT * FROM todos WHERE id ='%s'" % id)
+@app.route('/todo/<todo_id>', methods=['GET'])
+def todo(todo_id):
+    cur = g.db.execute(
+        "SELECT * FROM todos \
+        WHERE id = ? AND user_id = ?",
+        (todo_id, session['user_id'])
+    )
     todo = cur.fetchone()
+    if not todo:
+        abort(404)
     return render_template('todo.html', todo=todo)
 
 
