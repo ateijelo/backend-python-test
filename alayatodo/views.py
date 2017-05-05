@@ -11,6 +11,7 @@ from flask import (
     render_template,
     request,
     session,
+    url_for,
     )
 
 
@@ -81,24 +82,33 @@ def todo(todo_id):
 @login_required
 def todos():
     per_page = request.args.get('per_page', 10, int)
+    page = request.args.get('page', 1, int)
+    session['per_page'] = per_page
+    session['page'] = page
     todos = db.session.query(Todo).filter(
         Todo.user_id == session['user_id']
     ).paginate(per_page=per_page)
-    return render_template('todos.html', todos=todos)
+    return render_template('todos.html', todos=todos, page=page)
 
 
 @app.route('/todo/', methods=['POST'])
 @login_required
 def todos_POST():
     description = request.form.get('description', '')
+    per_page = session.get('per_page', None)
+    page = 1
     if len(description) > 0:
         todo = Todo(description=description, user_id=session['user_id'], completed=False)
         db.session.add(todo)
         db.session.commit()
         flash("Todo added successfully", "success")
+        c = db.session.query(Todo).filter(
+            Todo.user_id == session['user_id']
+        ).count()
+        page = 1 + (c - 1) // per_page
     else:
         flash("Description can not be empty", "danger")
-    return redirect('/todo')
+    return redirect(url_for('todos', page=page, per_page=per_page))
 
 
 @app.route('/todo/<todo_id>', methods=['POST'])
