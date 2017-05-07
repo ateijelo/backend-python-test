@@ -115,11 +115,20 @@ def todos_POST():
 @login_required
 def todo_delete(todo_id):
     todo = db.session.query(Todo).get(todo_id)
+    page = session.get('page', None)
+    per_page = session.get('per_page', None)
     if todo and todo.user_id == session['user_id']:
+        if page and per_page:
+            c = db.session.query(Todo).filter(
+                Todo.user_id == session['user_id']
+            ).count()
+            last_page = 1 + (c - 1) // per_page
+            if page == last_page and (c % per_page == 1):
+                page = max(1, page - 1)
         db.session.delete(todo)
         db.session.commit()
         flash("Todo deleted successfully", "success")
-    return redirect('/todo')
+    return redirect(url_for('todos', page=page, per_page=per_page))
 
 
 @login_required
